@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import gspread
 from google.oauth2.service_account import Credentials
-from st_aggrid import AgGrid, GridOptionsBuilder
 import io
 from datetime import datetime
 
@@ -85,22 +84,6 @@ st.subheader("Listado de Tickets")
 df = get_data()
 
 if not df.empty:
-    df = df[[
-        "Código", "Localizador", "Básico",
-        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Fecha Creación"
-    ]]
-
-    gb = GridOptionsBuilder.from_dataframe(df)
-    gb.configure_columns(["Código", "Localizador", "Básico", "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Fecha Creación"], editable=False, wrapText=True, autoHeight=True)
-    grid_options = gb.build()
-
-    grid_response = AgGrid(
-        df,
-        gridOptions=grid_options,
-        fit_columns_on_grid_load=True,
-        height=600,
-        allow_unsafe_jscode=True,
-        theme="streamlit"
-    )
+    st.dataframe(df)  # Muestra la tabla usando la función básica de Streamlit
 else:
     st.warning("No hay incidencias registradas todavía.")
