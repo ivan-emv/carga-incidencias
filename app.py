@@ -85,7 +85,6 @@ df = get_data()
 if not df.empty and all(isinstance(col, str) for col in df.columns):
     df.columns = df.columns.str.strip()
 
-st.write("🔍 Columnas detectadas:", df.columns.tolist())
 
 
 # Filtros
@@ -147,7 +146,7 @@ if not df.empty:
         for i, fila_cambios in cambios.iterrows():
             for col in cambios.columns:
                 if fila_cambios[col]:
-                    sheet.update_cell(i + 2, df_editado.columns.get_loc(col) + 1, df_editado.at[i, col])
+                    sheet.update_cell(df.index[i] + 2, df_editado.columns.get_loc(col) + 1, df_editado.at[i, col])
         
         df_original = df.drop(columns=["Estado Color"])
         df_editado = grid_response["data"].copy().drop(columns=["Estado Color"])
@@ -156,7 +155,7 @@ if not df.empty:
         for i, fila_cambios in cambios.iterrows():
             for col in cambios.columns:
                 if fila_cambios[col]:
-                    sheet.update_cell(i + 2, df_editado.columns.get_loc(col) + 1, df_editado.at[i, col])
+                    sheet.update_cell(df.index[i] + 2, df_editado.columns.get_loc(col) + 1, df_editado.at[i, col])
         st.success("✅ Solo las celdas modificadas fueron actualizadas correctamente.")
 
         
