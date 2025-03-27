@@ -4,8 +4,18 @@ import gspread
 from google.oauth2.service_account import Credentials
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 import io
-from gspread.utils import rowcol_to_a1
 from datetime import datetime
+
+# Ocultar la barra superior de Streamlit
+st.markdown(
+    """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Incidencias", layout="wide")
@@ -53,11 +63,10 @@ with st.form("form_ticket"):
                 except:
                     pass
         new_codigo = f"INCI{last_codigo + 1:04d}"
-        estado = "Abierta"
         fecha_creacion = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         nueva_fila = [
             new_codigo, localizador, basico, fecha_viaje_str,
-            descripcion, prioridad, estado, fecha_creacion, ""
+            descripcion, prioridad, fecha_creacion
         ]
         add_ticket(nueva_fila)
         st.success(f"🎉 Ticket {new_codigo} registrado correctamente")
@@ -79,12 +88,11 @@ df = get_data()
 if not df.empty:
     df = df[[
         "Código", "Localizador", "Básico",
-        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Estado"
+        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad"
     ]]
 
     gb = GridOptionsBuilder.from_dataframe(df)
     gb.configure_columns(["Código", "Localizador", "Básico", "Fecha del Viaje", "Descripción de la incidencia", "Prioridad"], editable=False, wrapText=True, autoHeight=True)
-    gb.configure_column("Estado", editable=True, cellEditor='agSelectCellEditor', cellEditorParams={'values': ["Abierta", "Resuelta"]})
     grid_options = gb.build()
 
     grid_response = AgGrid(
@@ -107,10 +115,6 @@ if not df.empty:
             codigo_actual = df_editado.at[i, "Código"]
             try:
                 fila_google = next(idx for idx, row in enumerate(sheet_data) if row.get("Código") == codigo_actual)
-                if df_editado.at[i, "Estado"] != df_original.at[i, "Estado"]:
-                    if df_editado.at[i, "Estado"] == "Resuelta":
-                        fecha_resolucion = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                        sheet.update_cell(fila_google + 2, df.columns.get_loc("Fecha Resolución") + 1, fecha_resolucion)
             except StopIteration:
                 st.error(f"No se encontró el código {codigo_actual} en la hoja de Google Sheets.")
 
