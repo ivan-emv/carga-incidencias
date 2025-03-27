@@ -105,20 +105,20 @@ if not df.empty:
         df_original = df.drop(columns=["Estado Color"])
         df_editado = grid_response["data"].copy().drop(columns=["Estado Color"])
 
-        cambios = df_editado != df_original
         sheet_data = sheet.get_all_records()
 
-        for i, fila_cambios in cambios.iterrows():
+        for i in df_editado.index:
             codigo_actual = df_editado.at[i, "Código"]
             try:
                 fila_google = next(idx for idx, row in enumerate(sheet_data) if row.get("Código") == codigo_actual)
-                for col in cambios.columns:
-                    if fila_cambios[col]:
+                for col in df_editado.columns:
+                    valor_nuevo = df_editado.at[i, col]
+                    valor_original = df_original.at[i, col]
+                    if str(valor_nuevo) != str(valor_original):
                         col_index = list(df_editado.columns).index(col) + 1
                         cell_a1 = rowcol_to_a1(fila_google + 2, col_index)
-                        nuevo_valor = df_editado.at[i, col]
-                        st.write(f"Actualizando celda {cell_a1} con valor: {nuevo_valor}")
-                        sheet.update(cell_a1, [[nuevo_valor]])
+                        st.write(f"Actualizando celda {cell_a1} con valor: {valor_nuevo}")
+                        sheet.update(cell_a1, [[valor_nuevo]])
             except StopIteration:
                 st.error(f"No se encontró el código {codigo_actual} en la hoja de Google Sheets.")
 
