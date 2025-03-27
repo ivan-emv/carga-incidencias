@@ -95,7 +95,7 @@ df = get_data()
 if not df.empty:
     df = df[[
         "Código", "Localizador", "Básico",
-        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Usuario", "Fecha Creación"
+        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Fecha Creación", "Usuario"
     ]]
 
     st.dataframe(df)
