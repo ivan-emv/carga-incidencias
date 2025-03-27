@@ -94,6 +94,7 @@ if "Estado" in df.columns and "Prioridad" in df.columns:
     
 # Filtros seguros
 if not df.empty and "Estado" in df.columns and "Prioridad" in df.columns:
+    pass
     with st.expander("🔎 Filtrar incidencias"):
         colf1, colf2 = st.columns(2)
         with colf1:
