@@ -1,10 +1,9 @@
 import streamlit as st
 import pandas as pd
-import datetime
 import gspread
 from google.oauth2.service_account import Credentials
 
-# Configuración de página
+# Configuración de la página
 st.set_page_config(page_title="Gestor de Incidencias", layout="wide")
 st.title("📅 Gestor de Tickets de Incidencias")
 
@@ -67,4 +66,4 @@ edited_df = st.data_editor(df, use_container_width=True, num_rows="dynamic", key
 
 if st.button("Guardar cambios"):
     update_sheet(edited_df)
-    st.success("📄 Cambios guardados correctamente en Google Sheets")
+    st.success("🗂 Cambios guardados correctamente en Google Sheets")
