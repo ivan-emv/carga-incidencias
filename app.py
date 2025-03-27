@@ -116,9 +116,10 @@ if not df.empty:
 
     # Configuración de AG-Grid
     gb = GridOptionsBuilder.from_dataframe(df)
-    gb.configure_column("Descripción de la incidencia", wrapText=True)  # Ajuste de texto en las celdas
+    gb.configure_column("Descripción de la incidencia", wrapText=True, autoHeight=True)  # Ajuste del texto y altura
     grid_options = gb.build()
 
+    # Mostrar tabla con AG-Grid
     AgGrid(df, gridOptions=grid_options, fit_columns_on_grid_load=True, height=600, allow_unsafe_jscode=True)
 else:
     st.warning("No hay incidencias registradas todavía.")
