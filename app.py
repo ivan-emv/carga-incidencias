@@ -83,8 +83,12 @@ if not df.empty:
         theme="streamlit"
     )
 
-    edited_df = grid_response["data"]
     if st.button("Guardar cambios"):
+    updated_df = grid_response["data"].copy()
+    updated_df = updated_df.drop(columns=["Estado Color"])
+    update_sheet(updated_df)
+    st.success("🗂 Cambios guardados correctamente en Google Sheets")
+    st.experimental_rerun()
         edited_df = edited_df.drop(columns=["Estado Color"])
         update_sheet(edited_df)
         st.success("🗂 Cambios guardados correctamente en Google Sheets")
