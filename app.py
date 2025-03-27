@@ -9,17 +9,6 @@ from datetime import datetime
 # Configuración de la página (debe ir al inicio)
 st.set_page_config(page_title="Gestor de Incidencias", layout="wide")
 
-# Ocultar la barra superior de Streamlit
-st.markdown(
-    """
-    <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 # Configuración de la página
 st.title("🖇 Gestor de Tickets de Incidencias")
 
