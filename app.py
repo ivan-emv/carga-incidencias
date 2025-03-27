@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import gspread
@@ -8,7 +7,7 @@ import io
 
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Incidencias", layout="wide")
-st.title("📅 Gestor de Tickets de Incidencias")
+st.title("🗕️ Gestor de Tickets de Incidencias")
 
 # Autenticación con Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -41,7 +40,6 @@ with st.form("form_ticket"):
     submitted = st.form_submit_button("Registrar Ticket")
 
     if submitted:
-        # Generar nuevo código incremental
         existing_data = sheet.get_all_records()
         last_codigo = 0
         for row in existing_data:
@@ -61,12 +59,7 @@ with st.form("form_ticket"):
         add_ticket(nueva_fila)
         st.success(f"🎉 Ticket {new_codigo} registrado correctamente")
 
-# 🔍 Buscar por Código
-with st.expander("🔎 Buscar por Código"):
-    search_codigo = st.text_input("Código exacto o parcial")
-    
-# 📤 Exportar a Excel
-
+# Exportación a Excel
 output = io.BytesIO()
 get_data().to_excel(output, index=False, engine="openpyxl")
 st.download_button(
@@ -76,20 +69,54 @@ st.download_button(
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
 
-
 # Visualización de incidencias
 st.subheader("Listado de Tickets")
-
-
 df = get_data()
-if not df.empty and all(isinstance(col, str) for col in df.columns):
-    df.columns = df.columns.str.strip()
 
+if not df.empty:
+    df["Estado Color"] = df["Estado"].map({
+        "Abierta": "🔴",
+        "En proceso": "🟡",
+        "Resuelta": "🟢"
+    })
+    df = df[[
+        "Estado Color", "Código", "Localizador", "Básico",
+        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Estado"
+    ]]
 
+    gb = GridOptionsBuilder.from_dataframe(df)
+    gb.configure_columns(["Código", "Localizador", "Básico", "Fecha del Viaje", "Descripción de la incidencia", "Prioridad"], editable=False, wrapText=True, autoHeight=True)
+    gb.configure_column("Estado", editable=True, cellEditor='agSelectCellEditor', cellEditorParams={'values': ["Abierta", "En proceso", "Resuelta"]})
+    gb.configure_column("Estado Color", editable=False, width=60)
+    grid_options = gb.build()
 
-# Filtros
+    grid_response = AgGrid(
+        df,
+        gridOptions=grid_options,
+        update_mode=GridUpdateMode.MANUAL,
+        fit_columns_on_grid_load=True,
+        height=600,
+        allow_unsafe_jscode=True,
+        theme="streamlit"
+    )
 
-# Filtros seguros
-if "Estado" in df.columns and "Prioridad" in df.columns:
-    
-# Filtros seguros
+    if st.button("Guardar cambios"):
+        df_original = df.drop(columns=["Estado Color"])
+        df_editado = grid_response["data"].copy().drop(columns=["Estado Color"])
+
+        cambios = df_editado != df_original
+        for i, fila_cambios in cambios.iterrows():
+            for col in cambios.columns:
+                if fila_cambios[col]:
+                    sheet.update_cell(df.index[i] + 2, df_editado.columns.get_loc(col) + 1, df_editado.at[i, col])
+        st.success("✅ Solo las celdas modificadas fueron actualizadas correctamente.")
+
+        try:
+            if hasattr(st, "rerun"):
+                st.rerun()
+            else:
+                st.experimental_rerun()
+        except:
+            st.warning("Recarga no disponible, por favor actualice manualmente.")
+else:
+    st.warning("No hay incidencias registradas todavía.")
