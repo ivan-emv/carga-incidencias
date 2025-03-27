@@ -88,11 +88,11 @@ df = get_data()
 if not df.empty:
     df = df[[
         "Código", "Localizador", "Básico",
-        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad"
+        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Fecha Creación"
     ]]
 
     gb = GridOptionsBuilder.from_dataframe(df)
-    gb.configure_columns(["Código", "Localizador", "Básico", "Fecha del Viaje", "Descripción de la incidencia", "Prioridad"], editable=False, wrapText=True, autoHeight=True)
+    gb.configure_columns(["Código", "Localizador", "Básico", "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Fecha Creación"], editable=False, wrapText=True, autoHeight=True)
     grid_options = gb.build()
 
     grid_response = AgGrid(
