@@ -56,10 +56,20 @@ with st.form("form_ticket"):
 st.subheader("Listado de Tickets")
 df = get_data()
 
-# Ordenar por columnas
-st.markdown("**Haz clic en el título de la columna para ordenar**")
-selected_col = st.selectbox("Ordenar por", df.columns, index=2)
-df = df.sort_values(by=selected_col)
+if not df.empty:
+    st.markdown("**Haz clic en el título de la columna para ordenar**")
+    selected_col = st.selectbox("Ordenar por", df.columns, index=2)
+    df = df.sort_values(by=selected_col)
+    
+    # Edición del estado
+    edited_df = st.data_editor(df, use_container_width=True, num_rows="dynamic", key="editor")
+
+    if st.button("Guardar cambios"):
+        update_sheet(edited_df)
+        st.success("🗂 Cambios guardados correctamente en Google Sheets")
+else:
+    st.warning("No hay incidencias registradas todavía. Agrega una usando el formulario superior.")
+
 
 # Edición del estado
 edited_df = st.data_editor(df, use_container_width=True, num_rows="dynamic", key="editor")
