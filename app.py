@@ -91,7 +91,17 @@ if not df.empty and all(isinstance(col, str) for col in df.columns):
 
 # Filtros seguros
 if "Estado" in df.columns and "Prioridad" in df.columns:
+    
+# Filtros seguros
+if not df.empty and "Estado" in df.columns and "Prioridad" in df.columns:
     with st.expander("🔎 Filtrar incidencias"):
+        colf1, colf2 = st.columns(2)
+        with colf1:
+            estado_filtro = st.multiselect("Filtrar por Estado", options=df["Estado"].unique(), default=df["Estado"].unique())
+        with colf2:
+            prioridad_filtro = st.multiselect("Filtrar por Prioridad", options=df["Prioridad"].unique(), default=df["Prioridad"].unique())
+        df = df[df["Estado"].isin(estado_filtro) & df["Prioridad"].isin(prioridad_filtro)]
+
         colf1, colf2 = st.columns(2)
         with colf1:
             estado_filtro = st.multiselect("Filtrar por Estado", options=df["Estado"].unique(), default=df["Estado"].unique())
