@@ -79,7 +79,11 @@ st.download_button(
 
 # Visualización de incidencias
 st.subheader("Listado de Tickets")
+
 df = get_data()
+df.columns = df.columns.str.strip()  # Eliminar espacios invisibles o finales
+st.write("🔍 Columnas detectadas:", df.columns.tolist())
+
 
 # Filtros
 
