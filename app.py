@@ -108,7 +108,10 @@ if not df.empty:
         "En proceso": "🟡",
         "Resuelta": "🟢"
     })
-    df = df[["Estado Color", "Código", "Localizador", "Básico", "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Estado"]]
+    df = df[[
+        "Estado Color", "Código", "Localizador", "Básico",
+        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Estado"
+    ]]
         "Abierta": "🔴",
         "En proceso": "🟡",
         "Resuelta": "🟢"
