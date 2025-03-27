@@ -2,9 +2,19 @@ import streamlit as st
 import pandas as pd
 import gspread
 from google.oauth2.service_account import Credentials
-from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
+from st_aggrid import AgGrid, GridOptionsBuilder
 import io
 from datetime import datetime
+
+# 🔧 Ocultar la barra superior y el menú de Streamlit
+hide_streamlit_style = """
+    <style>
+        #MainMenu {visibility: hidden;}
+        header {visibility: hidden;}
+        footer {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # Configuración de la página (debe ir al inicio)
 st.set_page_config(page_title="Gestor de Incidencias", layout="wide")
@@ -89,34 +99,10 @@ if not df.empty:
     grid_response = AgGrid(
         df,
         gridOptions=grid_options,
-        update_mode=GridUpdateMode.MANUAL,
         fit_columns_on_grid_load=True,
         height=600,
         allow_unsafe_jscode=True,
         theme="streamlit"
     )
-
-    if st.button("Guardar cambios"):
-        df_original = df.copy()
-        df_editado = grid_response["data"].copy()
-
-        sheet_data = sheet.get_all_records()
-
-        for i in df_editado.index:
-            codigo_actual = df_editado.at[i, "Código"]
-            try:
-                fila_google = next(idx for idx, row in enumerate(sheet_data) if row.get("Código") == codigo_actual)
-            except StopIteration:
-                st.error(f"No se encontró el código {codigo_actual} en la hoja de Google Sheets.")
-
-        st.success("✅ Solo las celdas modificadas fueron actualizadas correctamente.")
-
-        try:
-            if hasattr(st, "rerun"):
-                st.rerun()
-            else:
-                st.experimental_rerun()
-        except:
-            st.warning("Recarga no disponible, por favor actualice manualmente.")
 else:
     st.warning("No hay incidencias registradas todavía.")
