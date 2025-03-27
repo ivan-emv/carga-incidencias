@@ -8,6 +8,8 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 # Configuración de la página (debe ir al inicio)
 st.set_page_config(page_title="Gestor de Incidencias", layout="wide")
+
+# Ocultar la barra superior de Streamlit
 hide_streamlit_style = """
     <style>
         #MainMenu {visibility: hidden;}
@@ -16,6 +18,9 @@ hide_streamlit_style = """
     </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+# Mostrar el logo
+st.image("/mnt/data/a1.png", use_column_width=True)
 
 # Configuración de la página
 st.title("🖇 Gestor de Tickets de Incidencias")
