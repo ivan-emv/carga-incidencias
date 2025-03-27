@@ -8,6 +8,14 @@ from datetime import datetime
 
 # Configuración de la página (debe ir al inicio)
 st.set_page_config(page_title="Gestor de Incidencias", layout="wide")
+hide_streamlit_style = """
+    <style>
+        #MainMenu {visibility: hidden;}
+        header {visibility: hidden;}
+        footer {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # Configuración de la página
 st.title("🖇 Gestor de Tickets de Incidencias")
