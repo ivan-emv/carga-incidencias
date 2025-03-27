@@ -4,4 +4,3 @@ gspread
 google-auth
 streamlit-aggrid
 openpyxl
-st-aggrid
