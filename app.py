@@ -112,10 +112,10 @@ if not df.empty:
             try:
                 fila_google = next(idx for idx, row in enumerate(sheet_data) if row.get("Código") == codigo_actual)
                 for col in df_editado.columns:
-                    valor_nuevo = df_editado.at[i, col]
-                    valor_original = df_original.at[i, col]
-                    st.write(f"Comparando: {str(valor_nuevo)} vs {str(valor_original)}")
-                    if str(valor_nuevo) != str(valor_original):
+                    valor_nuevo = str(df_editado.at[i, col]).strip()
+                    valor_original = str(df_original.at[i, col]).strip()
+                    st.write(f"Comparando: {valor_nuevo} vs {valor_original}")
+                    if valor_nuevo != valor_original:
                         col_index = list(df_editado.columns).index(col) + 1
                         cell_a1 = rowcol_to_a1(fila_google + 2, col_index)
                         st.write(f"Actualizando celda {cell_a1} con valor: {valor_nuevo}")
