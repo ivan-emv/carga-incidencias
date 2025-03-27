@@ -41,10 +41,10 @@ with st.form("form_ticket"):
 
     descripcion = st.text_area("Descripción de la incidencia")
     prioridad = st.selectbox("Prioridad", ["Baja", "Media", "Alta"])
-    estado = st.selectbox("Estado", ["Abierta", "En proceso", "Resuelta"])
     submitted = st.form_submit_button("Registrar Ticket")
 
     if submitted:
+        estado = "Abierta"  # Estado por defecto
         nueva_fila = [
             localizador, basico, fecha_viaje_str,
             descripcion, prioridad, estado
@@ -62,7 +62,19 @@ if not df.empty:
     df = df.sort_values(by=selected_col)
 
     # Edición del estado
-    edited_df = st.data_editor(df, use_container_width=True, num_rows="dynamic", key="editor")
+    edited_df = st.data_editor(
+        df,
+        use_container_width=True,
+        num_rows="dynamic",
+        column_config={
+            "Estado": st.column_config.SelectboxColumn(
+                "Estado",
+                help="Selecciona el estado de la incidencia",
+                options=["Abierta", "En proceso", "Resuelta"]
+            )
+        },
+        key="editor"
+    )
 
     if st.button("Guardar cambios"):
         update_sheet(edited_df)
