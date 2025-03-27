@@ -84,6 +84,7 @@ st.subheader("Listado de Tickets")
 df = get_data()
 
 if not df.empty:
-    st.dataframe(df)  # Muestra la tabla usando la función básica de Streamlit
+    # Eliminamos la columna del índice
+    st.dataframe(df, use_container_width=True)  # Muestra solo las columnas del Google Sheet sin el índice
 else:
     st.warning("No hay incidencias registradas todavía.")
