@@ -16,6 +16,7 @@ hide_streamlit_style = """
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+
 # Configuración de la página
 st.title("🖇 Gestor de Tickets de Incidencias")
 
@@ -48,12 +49,18 @@ with st.form("form_ticket"):
     descripcion = st.text_area("Descripción de la incidencia")
     prioridad = st.selectbox("Prioridad", ["Baja", "Media", "Alta"])
 
-    # Desplegable para seleccionar el usuario
+    # Desplegable para seleccionar el Usuario
     usuario = st.selectbox(
         "Selecciona el Usuario",
-        ["ELIGE USUARIO", "VIRI", "JAVI", "FERNANDO", "YOLANDA", "PILAR", "ROSA", "DANIEL", "CAMILA", "FATIMA", 
+        ["VIRI", "JAVI", "FERNANDO", "YOLANDA", "PILAR", "ROSA", "DANIEL", "CAMILA", "FATIMA", 
          "AKIO", "IVAN", "FELIPE", "IOANA", "JOSELIN", "ANA", "DAVID", "YOHANA", "JONATHAN", 
          "ELSI", "AGUSTIN", "FACUNDO", "JOSE CARLOS"]
+    )
+    
+    # Desplegable para seleccionar el Departamento
+    departamento = st.selectbox(
+        "Selecciona el Departamento",
+        ["OPERACIONES", "SERVICIOS EN RUTA", "BOOKING", "GRUPOS", "OTRO"]
     )
     
     submitted = st.form_submit_button("Registrar Ticket")
@@ -73,7 +80,7 @@ with st.form("form_ticket"):
         fecha_creacion = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         nueva_fila = [
             new_codigo, localizador, basico, fecha_viaje_str,
-            descripcion, prioridad, usuario, fecha_creacion
+            descripcion, prioridad, usuario, departamento, fecha_creacion
         ]
         add_ticket(nueva_fila)
         st.success(f"🎉 Ticket {new_codigo} registrado correctamente")
@@ -95,7 +102,7 @@ df = get_data()
 if not df.empty:
     df = df[[
         "Código", "Localizador", "Básico",
-        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Fecha Creación", "Usuario"
+        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Usuario", "Departamento", "Fecha Creación"
     ]]
 
     st.dataframe(df)
