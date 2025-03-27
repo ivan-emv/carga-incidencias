@@ -51,7 +51,7 @@ with st.form("form_ticket"):
     # Desplegable para seleccionar el usuario
     usuario = st.selectbox(
         "Selecciona el Usuario",
-        ["VIRI", "JAVI", "FERNANDO", "YOLANDA", "PILAR", "ROSA", "DANIEL", "CAMILA", "FATIMA", 
+        ["ELIGE USUARIO", "VIRI", "JAVI", "FERNANDO", "YOLANDA", "PILAR", "ROSA", "DANIEL", "CAMILA", "FATIMA", 
          "AKIO", "IVAN", "FELIPE", "IOANA", "JOSELIN", "ANA", "DAVID", "YOHANA", "JONATHAN", 
          "ELSI", "AGUSTIN", "FACUNDO", "JOSE CARLOS"]
     )
