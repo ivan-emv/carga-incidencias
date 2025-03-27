@@ -4,6 +4,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 import io
 from datetime import datetime
+from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 # Configuración de la página (debe ir al inicio)
 st.set_page_config(page_title="Gestor de Incidencias", layout="wide")
@@ -103,7 +104,7 @@ st.download_button(
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
 
-# Visualización de incidencias
+# Visualización de incidencias con AG-Grid
 st.subheader("Listado de Tickets")
 df = get_data()
 
@@ -113,7 +114,11 @@ if not df.empty:
         "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Usuario", "Departamento", "Fecha Creación"
     ]]
 
-    # Mostramos la tabla en Streamlit
-    st.dataframe(df)  # No se recorta el texto largo en esta función
+    # Configuración de AG-Grid
+    gb = GridOptionsBuilder.from_dataframe(df)
+    gb.configure_column("Descripción de la incidencia", wrapText=True)  # Ajuste de texto en las celdas
+    grid_options = gb.build()
+
+    AgGrid(df, gridOptions=grid_options, fit_columns_on_grid_load=True, height=600, allow_unsafe_jscode=True)
 else:
     st.warning("No hay incidencias registradas todavía.")
