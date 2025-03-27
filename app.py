@@ -114,6 +114,7 @@ if not df.empty:
                 for col in df_editado.columns:
                     valor_nuevo = df_editado.at[i, col]
                     valor_original = df_original.at[i, col]
+                    st.write(f"Comparando: {str(valor_nuevo)} vs {str(valor_original)}")
                     if str(valor_nuevo) != str(valor_original):
                         col_index = list(df_editado.columns).index(col) + 1
                         cell_a1 = rowcol_to_a1(fila_google + 2, col_index)
