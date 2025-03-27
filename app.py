@@ -56,6 +56,15 @@ with st.form("form_ticket"):
 st.subheader("Listado de Tickets")
 df = get_data()
 
+df['⚪'] = df['Estado'].map({
+    'Abierta': '🔴',
+    'En proceso': '🟡',
+    'Resuelta': '🟢'
+})
+# Reordenar para que la columna de color quede al inicio
+df = df[['⚪'] + [col for col in df.columns if col != '⚪']]
+
+
 if not df.empty:
     st.markdown("**Haz clic en el título de la columna para ordenar**")
     selected_col = st.selectbox("Ordenar por", df.columns, index=2)
@@ -65,6 +74,7 @@ if not df.empty:
     edited_df = st.data_editor(
         df,
         use_container_width=True,
+        height=600,
         num_rows="dynamic",
         column_config={
             "Estado": st.column_config.SelectboxColumn(
