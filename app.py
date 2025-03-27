@@ -34,32 +34,43 @@ def get_data():
 def add_ticket(data):
     sheet.append_row(data)
 
+# Variables iniciales para el formulario
+localizador = ""
+basico = ""
+fecha_viaje_str = ""
+descripcion = ""
+prioridad = "Baja"
+usuario = "VIRI"
+departamento = "OPERACIONES"
+
 # Formulario de nueva incidencia
 st.subheader("Registrar nueva incidencia")
 with st.form("form_ticket"):
     col1, col2, col3 = st.columns(3)
     with col1:
-        localizador = st.text_input("Localizador")
+        localizador = st.text_input("Localizador", value=localizador)
     with col2:
-        basico = st.text_input("Básico")
+        basico = st.text_input("Básico", value=basico)
     with col3:
-        fecha_viaje_str = st.text_input("Fecha del Viaje (DD/MM/YYYY)")
+        fecha_viaje_str = st.text_input("Fecha del Viaje (DD/MM/YYYY)", value=fecha_viaje_str)
 
-    descripcion = st.text_area("Descripción de la incidencia")
-    prioridad = st.selectbox("Prioridad", ["Baja", "Media", "Alta"])
+    descripcion = st.text_area("Descripción de la incidencia", value=descripcion)
+    prioridad = st.selectbox("Prioridad", ["Baja", "Media", "Alta"], index=["Baja", "Media", "Alta"].index(prioridad))
 
     # Desplegable para seleccionar el Usuario
     usuario = st.selectbox(
         "Selecciona el Usuario",
         ["ELIGE UNA OPCIÓN", "VIRI", "JAVI", "FERNANDO", "YOLANDA", "PILAR", "ROSA", "DANIEL", "CAMILA", "FATIMA", 
          "AKIO", "IVAN", "FELIPE", "IOANA", "JOSELIN", "ANA", "DAVID", "YOHANA", "JONATHAN", 
-         "ELSI", "AGUSTIN", "FACUNDO", "JOSE CARLOS"]
+         "ELSI", "AGUSTIN", "FACUNDO", "JOSE CARLOS"], index=["ELIGE UNA OPCIÓN", "VIRI", "JAVI", "FERNANDO", "YOLANDA", "PILAR", "ROSA", "DANIEL", "CAMILA", "FATIMA", 
+         "AKIO", "IVAN", "FELIPE", "IOANA", "JOSELIN", "ANA", "DAVID", "YOHANA", "JONATHAN", 
+         "ELSI", "AGUSTIN", "FACUNDO", "JOSE CARLOS"].index(usuario)
     )
     
     # Desplegable para seleccionar el Departamento
     departamento = st.selectbox(
         "Selecciona el Departamento",
-        ["ELIGE UNA OPCIÓN", "OPERACIONES", "SERVICIOS EN RUTA", "BOOKING", "GRUPOS", "OTRO"]
+        ["ELIGE UNA OPCIÓN", "OPERACIONES", "SERVICIOS EN RUTA", "BOOKING", "GRUPOS", "OTRO"], index=["OPERACIONES", "SERVICIOS EN RUTA", "BOOKING", "GRUPOS", "OTRO"].index(departamento)
     )
     
     submitted = st.form_submit_button("Registrar Ticket")
@@ -84,8 +95,14 @@ with st.form("form_ticket"):
         add_ticket(nueva_fila)
         st.success(f"🎉 Ticket {new_codigo} registrado correctamente")
         
-        # Limpia el formulario y reinicia la app
-        st.rerun()
+        # Limpieza del formulario
+        localizador = ""
+        basico = ""
+        fecha_viaje_str = ""
+        descripcion = ""
+        prioridad = "Baja"
+        usuario = "ELIGE UNA OPCIÓN"
+        departamento = "ELIGE UNA OPCIÓN"
 
 # Exportación a Excel
 output = io.BytesIO()
