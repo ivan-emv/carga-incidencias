@@ -80,8 +80,11 @@ st.download_button(
 # Visualización de incidencias
 st.subheader("Listado de Tickets")
 
+
 df = get_data()
-df.columns = df.columns.str.strip()  # Eliminar espacios invisibles o finales
+if not df.empty and all(isinstance(col, str) for col in df.columns):
+    df.columns = df.columns.str.strip()
+
 st.write("🔍 Columnas detectadas:", df.columns.tolist())
 
 
@@ -156,10 +159,15 @@ if not df.empty:
                     sheet.update_cell(i + 2, df_editado.columns.get_loc(col) + 1, df_editado.at[i, col])
         st.success("✅ Solo las celdas modificadas fueron actualizadas correctamente.")
 
+        
         try:
-            st.rerun()
+            if hasattr(st, "rerun"):
+                st.rerun()
+            else:
+                st.experimental_rerun()
         except:
-            st.experimental_rerun()
+            st.warning("Recarga no disponible, por favor actualice manualmente.")
+
 
 else:
     st.warning("No hay incidencias registradas con esos criterios.")
