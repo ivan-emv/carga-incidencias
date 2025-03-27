@@ -118,7 +118,7 @@ if not df.empty:
                     if valor_nuevo != valor_original:
                         col_index = list(df_editado.columns).index(col) + 1
                         cell_a1 = rowcol_to_a1(fila_google + 2, col_index)
-                        st.write(f"Actualizando celda {cell_a1} con valor: {valor_nuevo}")
+                        st.write(f"Comparando celda {cell_a1} con valor: {valor_nuevo}")
                         sheet.update(cell_a1, [[valor_nuevo]])
             except StopIteration:
                 st.error(f"No se encontró el código {codigo_actual} en la hoja de Google Sheets.")
