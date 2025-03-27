@@ -103,7 +103,13 @@ with st.expander("🔎 Filtrar incidencias"):
 if not df.empty:
     # Color visual
     
-    df.insert(0, "Estado Color", df["Estado"].map({
+        df["Estado Color"] = df["Estado"].map({
+        "Abierta": "🔴",
+        "En proceso": "🟡",
+        "Resuelta": "🟢"
+    })
+    df = df[["Estado Color", "Código", "Localizador", "Básico", "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Estado"]]
+
         "Abierta": "🔴",
         "En proceso": "🟡",
         "Resuelta": "🟢"
