@@ -57,6 +57,17 @@ with st.form("form_ticket"):
 st.subheader("Listado de Tickets")
 df = get_data()
 
+# Filtros por Estado y Prioridad
+with st.expander("🔎 Filtrar incidencias"):
+    colf1, colf2 = st.columns(2)
+    with colf1:
+        estado_filtro = st.multiselect("Filtrar por Estado", options=df["Estado"].unique(), default=df["Estado"].unique())
+    with colf2:
+        prioridad_filtro = st.multiselect("Filtrar por Prioridad", options=df["Prioridad"].unique(), default=df["Prioridad"].unique())
+
+    df = df[df["Estado"].isin(estado_filtro) & df["Prioridad"].isin(prioridad_filtro)]
+
+
 if not df.empty:
     # Color visual
     df.insert(0, "Estado Color", df["Estado"].map({
@@ -83,12 +94,8 @@ if not df.empty:
         theme="streamlit"
     )
 
+    edited_df = grid_response["data"]
     if st.button("Guardar cambios"):
-    updated_df = grid_response["data"].copy()
-    updated_df = updated_df.drop(columns=["Estado Color"])
-    update_sheet(updated_df)
-    st.success("🗂 Cambios guardados correctamente en Google Sheets")
-    st.experimental_rerun()
         edited_df = edited_df.drop(columns=["Estado Color"])
         update_sheet(edited_df)
         st.success("🗂 Cambios guardados correctamente en Google Sheets")
