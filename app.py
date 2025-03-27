@@ -85,7 +85,7 @@ with st.form("form_ticket"):
         st.success(f"🎉 Ticket {new_codigo} registrado correctamente")
         
         # Limpia el formulario y reinicia la app
-        st.experimental_rerun()
+        st.rerun()
 
 # Exportación a Excel
 output = io.BytesIO()
