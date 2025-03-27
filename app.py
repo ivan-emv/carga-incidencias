@@ -4,6 +4,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 import io
+from gspread.utils import rowcol_to_a1
 
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Incidencias", layout="wide")
@@ -113,8 +114,11 @@ if not df.empty:
                 fila_google = next(idx for idx, row in enumerate(sheet_data) if row.get("Código") == codigo_actual)
                 for col in cambios.columns:
                     if fila_cambios[col]:
-                        col_index = list(df_editado.columns).index(col) + 1  # Posición real en la hoja
-                        sheet.update_cell(fila_google + 2, col_index, df_editado.at[i, col])
+                        col_index = list(df_editado.columns).index(col) + 1
+                        cell_a1 = rowcol_to_a1(fila_google + 2, col_index)
+                        nuevo_valor = df_editado.at[i, col]
+                        st.write(f"Actualizando celda {cell_a1} con valor: {nuevo_valor}")
+                        sheet.update(cell_a1, [[nuevo_valor]])
             except StopIteration:
                 st.error(f"No se encontró el código {codigo_actual} en la hoja de Google Sheets.")
 
