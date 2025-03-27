@@ -66,12 +66,16 @@ with st.expander("🔎 Buscar por Código"):
     search_codigo = st.text_input("Código exacto o parcial")
     
 # 📤 Exportar a Excel
+
+output = io.BytesIO()
+get_data().to_excel(output, index=False, engine="openpyxl")
 st.download_button(
     label="📁 Descargar listado en Excel",
-    data=get_data().to_excel(index=False, engine="openpyxl"),
+    data=output.getvalue(),
     file_name="incidencias.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
+
 
 # Visualización de incidencias
 st.subheader("Listado de Tickets")
