@@ -47,6 +47,15 @@ with st.form("form_ticket"):
 
     descripcion = st.text_area("Descripción de la incidencia")
     prioridad = st.selectbox("Prioridad", ["Baja", "Media", "Alta"])
+
+    # Desplegable para seleccionar el usuario
+    usuario = st.selectbox(
+        "Selecciona el Usuario",
+        ["VIRI", "JAVI", "FERNANDO", "YOLANDA", "PILAR", "ROSA", "DANIEL", "CAMILA", "FATIMA", 
+         "AKIO", "IVAN", "FELIPE", "IOANA", "JOSELIN", "ANA", "DAVID", "YOHANA", "JONATHAN", 
+         "ELSI", "AGUSTIN", "FACUNDO", "JOSE CARLOS"]
+    )
+    
     submitted = st.form_submit_button("Registrar Ticket")
 
     if submitted:
@@ -64,7 +73,7 @@ with st.form("form_ticket"):
         fecha_creacion = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         nueva_fila = [
             new_codigo, localizador, basico, fecha_viaje_str,
-            descripcion, prioridad, fecha_creacion
+            descripcion, prioridad, usuario, fecha_creacion
         ]
         add_ticket(nueva_fila)
         st.success(f"🎉 Ticket {new_codigo} registrado correctamente")
@@ -84,7 +93,11 @@ st.subheader("Listado de Tickets")
 df = get_data()
 
 if not df.empty:
-    # Eliminamos la columna del índice
-    st.dataframe(df, use_container_width=True)  # Muestra solo las columnas del Google Sheet sin el índice
+    df = df[[
+        "Código", "Localizador", "Básico",
+        "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Usuario", "Fecha Creación"
+    ]]
+
+    st.dataframe(df)
 else:
     st.warning("No hay incidencias registradas todavía.")
