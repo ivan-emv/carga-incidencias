@@ -46,7 +46,7 @@ with st.form("form_ticket"):
 
     if submitted:
         nueva_fila = [
-            localizador, basico, fecha_viaje.strftime("%Y-%m-%d"),
+            localizador, basico, fecha_viaje.strftime("%d/%m/%Y"),
             descripcion, prioridad, estado
         ]
         add_ticket(nueva_fila)
