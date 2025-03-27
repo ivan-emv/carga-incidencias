@@ -45,13 +45,45 @@ with st.form("form_ticket"):
     submitted = st.form_submit_button("Registrar Ticket")
 
     if submitted:
+
+        # Generar nuevo código incremental
+        existing_data = sheet.get_all_records()
+        last_codigo = 0
+        for row in existing_data:
+            cod = row.get("Código", "")
+            if cod.startswith("INCI"):
+                try:
+                    n = int(cod[4:])
+                    last_codigo = max(last_codigo, n)
+                except:
+                    pass
+        new_codigo = f"INCI{last_codigo + 1:04d}"
+
         estado = "Abierta"
         nueva_fila = [
-            localizador, basico, fecha_viaje_str,
+            new_codigo, localizador, basico, fecha_viaje_str,
             descripcion, prioridad, estado
         ]
         add_ticket(nueva_fila)
-        st.success("🎉 Ticket registrado correctamente")
+        st.success(f"🎉 Ticket {new_codigo} registrado correctamente")
+
+
+
+# 🔍 Búsqueda por Código
+with st.expander("🔎 Buscar por Código"):
+    search_codigo = st.text_input("Código exacto o parcial")
+    if search_codigo:
+        df = df[df["Código"].str.contains(search_codigo, case=False)]
+
+
+# 📤 Exportar a Excel
+st.download_button(
+    label="📁 Descargar listado en Excel",
+    data=df.drop(columns=["Estado Color"]).to_excel(index=False, engine="openpyxl"),
+    file_name="incidencias.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
+
 
 # Visualización de incidencias
 st.subheader("Listado de Tickets")
@@ -70,7 +102,14 @@ with st.expander("🔎 Filtrar incidencias"):
 
 if not df.empty:
     # Color visual
+    
     df.insert(0, "Estado Color", df["Estado"].map({
+        "Abierta": "🔴",
+        "En proceso": "🟡",
+        "Resuelta": "🟢"
+    }))
+    df = df[["Estado Color", "Código", "Localizador", "Básico", "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Estado"]]
+
         "Abierta": "🔴",
         "En proceso": "🟡",
         "Resuelta": "🟢"
