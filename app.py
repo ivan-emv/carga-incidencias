@@ -113,6 +113,7 @@ if not df.empty:
         "Fecha del Viaje", "Descripción de la incidencia", "Prioridad", "Usuario", "Departamento", "Fecha Creación"
     ]]
 
-    st.dataframe(df)
+    # Mostramos la tabla en Streamlit
+    st.dataframe(df)  # No se recorta el texto largo en esta función
 else:
     st.warning("No hay incidencias registradas todavía.")
