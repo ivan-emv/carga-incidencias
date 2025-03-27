@@ -37,7 +37,7 @@ with st.form("form_ticket"):
     with col2:
         basico = st.text_input("Básico")
     with col3:
-        fecha_viaje = st.date_input("Fecha del Viaje", format="YYYY-MM-DD")
+        fecha_viaje_str = st.text_input("Fecha del Viaje (DD/MM/YYYY)")
 
     descripcion = st.text_area("Descripción de la incidencia")
     prioridad = st.selectbox("Prioridad", ["Baja", "Media", "Alta"])
@@ -46,7 +46,7 @@ with st.form("form_ticket"):
 
     if submitted:
         nueva_fila = [
-            localizador, basico, fecha_viaje.strftime("%d/%m/%Y"),
+            localizador, basico, fecha_viaje_str,
             descripcion, prioridad, estado
         ]
         add_ticket(nueva_fila)
@@ -60,7 +60,7 @@ if not df.empty:
     st.markdown("**Haz clic en el título de la columna para ordenar**")
     selected_col = st.selectbox("Ordenar por", df.columns, index=2)
     df = df.sort_values(by=selected_col)
-    
+
     # Edición del estado
     edited_df = st.data_editor(df, use_container_width=True, num_rows="dynamic", key="editor")
 
@@ -69,11 +69,3 @@ if not df.empty:
         st.success("🗂 Cambios guardados correctamente en Google Sheets")
 else:
     st.warning("No hay incidencias registradas todavía. Agrega una usando el formulario superior.")
-
-
-# Edición del estado
-edited_df = st.data_editor(df, use_container_width=True, num_rows="dynamic", key="editor")
-
-if st.button("Guardar cambios"):
-    update_sheet(edited_df)
-    st.success("🗂 Cambios guardados correctamente en Google Sheets")
