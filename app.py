@@ -9,7 +9,7 @@ from datetime import datetime
 
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Incidencias", layout="wide")
-st.title("🗕️ Gestor de Tickets de Incidencias")
+st.title("🖇 Gestor de Tickets de Incidencias")
 
 # Autenticación con Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -66,7 +66,7 @@ with st.form("form_ticket"):
 output = io.BytesIO()
 get_data().to_excel(output, index=False, engine="openpyxl")
 st.download_button(
-    label="📁 Descargar listado en Excel",
+    label="📂 Descargar listado en Excel",
     data=output.getvalue(),
     file_name="incidencias.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
