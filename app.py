@@ -16,7 +16,6 @@ hide_streamlit_style = """
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-
 # Configuración de la página
 st.title("🖇 Gestor de Tickets de Incidencias")
 
@@ -52,7 +51,7 @@ with st.form("form_ticket"):
     # Desplegable para seleccionar el Usuario
     usuario = st.selectbox(
         "Selecciona el Usuario",
-        ["VIRI", "JAVI", "FERNANDO", "YOLANDA", "PILAR", "ROSA", "DANIEL", "CAMILA", "FATIMA", 
+        ["ELIGE UNA OPCIÓN", "VIRI", "JAVI", "FERNANDO", "YOLANDA", "PILAR", "ROSA", "DANIEL", "CAMILA", "FATIMA", 
          "AKIO", "IVAN", "FELIPE", "IOANA", "JOSELIN", "ANA", "DAVID", "YOHANA", "JONATHAN", 
          "ELSI", "AGUSTIN", "FACUNDO", "JOSE CARLOS"]
     )
@@ -60,7 +59,7 @@ with st.form("form_ticket"):
     # Desplegable para seleccionar el Departamento
     departamento = st.selectbox(
         "Selecciona el Departamento",
-        ["OPERACIONES", "SERVICIOS EN RUTA", "BOOKING", "GRUPOS", "OTRO"]
+        ["ELIGE UNA OPCIÓN", "OPERACIONES", "SERVICIOS EN RUTA", "BOOKING", "GRUPOS", "OTRO"]
     )
     
     submitted = st.form_submit_button("Registrar Ticket")
@@ -84,6 +83,9 @@ with st.form("form_ticket"):
         ]
         add_ticket(nueva_fila)
         st.success(f"🎉 Ticket {new_codigo} registrado correctamente")
+        
+        # Limpia el formulario y reinicia la app
+        st.experimental_rerun()
 
 # Exportación a Excel
 output = io.BytesIO()
