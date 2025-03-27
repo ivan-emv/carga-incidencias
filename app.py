@@ -14,7 +14,7 @@ creds = Credentials.from_service_account_info(
     st.secrets["gcp_service_account"], scopes=scope
 )
 client = gspread.authorize(creds)
-sheet = client.open_by_key(st.secrets["sheet_id"]).worksheet("Incidencias")
+sheet = client.open_by_key(st.secrets["1kBLQAdhYbnP8HTUgpr_rmmGEaOdyMU2tI97ogegrGxY"]).worksheet("Incidencias")
 
 def get_data():
     data = sheet.get_all_records()
