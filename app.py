@@ -16,7 +16,8 @@ hide_streamlit_style = """
     </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
+# 📌 Agregar el logo en la parte superior con tamaño reducido
+    st.image("https://github.com/ivan-emv/acceso-agentes/blob/main/a1.png?raw=true", width=500)
 # Configuración de la página
 st.title("🖇 Gestor de Tickets de Incidencias")
 
