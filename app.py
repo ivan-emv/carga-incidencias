@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import gspread
 from google.oauth2.service_account import Credentials
+from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Incidencias", layout="wide")
@@ -44,7 +45,7 @@ with st.form("form_ticket"):
     submitted = st.form_submit_button("Registrar Ticket")
 
     if submitted:
-        estado = "Abierta"  # Estado por defecto
+        estado = "Abierta"
         nueva_fila = [
             localizador, basico, fecha_viaje_str,
             descripcion, prioridad, estado
@@ -52,41 +53,39 @@ with st.form("form_ticket"):
         add_ticket(nueva_fila)
         st.success("🎉 Ticket registrado correctamente")
 
-# Visualización y gestión de incidencias
+# Visualización de incidencias
 st.subheader("Listado de Tickets")
 df = get_data()
 
-df['⚪'] = df['Estado'].map({
-    'Abierta': '🔴',
-    'En proceso': '🟡',
-    'Resuelta': '🟢'
-})
-# Reordenar para que la columna de color quede al inicio
-df = df[['⚪'] + [col for col in df.columns if col != '⚪']]
-
-
 if not df.empty:
-    st.markdown("**Haz clic en el título de la columna para ordenar**")
-    selected_col = st.selectbox("Ordenar por", df.columns, index=2)
-    df = df.sort_values(by=selected_col)
+    # Color visual
+    df.insert(0, "Estado Color", df["Estado"].map({
+        "Abierta": "🔴",
+        "En proceso": "🟡",
+        "Resuelta": "🟢"
+    }))
 
-    # Edición del estado
-    edited_df = st.data_editor(
+    gb = GridOptionsBuilder.from_dataframe(df)
+    gb.configure_columns(["Localizador", "Básico", "Fecha del Viaje", "Descripción de la incidencia", "Prioridad"],
+                         editable=False, wrapText=True, autoHeight=True)
+    gb.configure_column("Estado", editable=True, cellEditor='agSelectCellEditor',
+                        cellEditorParams={'values': ["Abierta", "En proceso", "Resuelta"]})
+    gb.configure_column("Estado Color", editable=False, width=60)
+    grid_options = gb.build()
+
+    grid_response = AgGrid(
         df,
-        use_container_width=True,
+        gridOptions=grid_options,
+        update_mode=GridUpdateMode.MANUAL,
+        fit_columns_on_grid_load=True,
         height=600,
-        num_rows="dynamic",
-        column_config={
-            "Estado": st.column_config.SelectboxColumn(
-                "Estado",
-                help="Selecciona el estado de la incidencia",
-                options=["Abierta", "En proceso", "Resuelta"]
-            )
-        },
-        key="editor"
+        allow_unsafe_jscode=True,
+        theme="streamlit"
     )
 
+    edited_df = grid_response["data"]
     if st.button("Guardar cambios"):
+        edited_df = edited_df.drop(columns=["Estado Color"])
         update_sheet(edited_df)
         st.success("🗂 Cambios guardados correctamente en Google Sheets")
 else:
