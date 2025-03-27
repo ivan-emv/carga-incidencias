@@ -145,7 +145,21 @@ if not df.empty:
             for col in cambios.columns:
                 if fila_cambios[col]:
                     sheet.update_cell(i + 2, df_editado.columns.get_loc(col) + 1, df_editado.at[i, col])
+        
+        df_original = df.drop(columns=["Estado Color"])
+        df_editado = grid_response["data"].copy().drop(columns=["Estado Color"])
+
+        cambios = df_editado != df_original
+        for i, fila_cambios in cambios.iterrows():
+            for col in cambios.columns:
+                if fila_cambios[col]:
+                    sheet.update_cell(i + 2, df_editado.columns.get_loc(col) + 1, df_editado.at[i, col])
         st.success("✅ Solo las celdas modificadas fueron actualizadas correctamente.")
-        st.experimental_rerun()
+
+        try:
+            st.rerun()
+        except:
+            st.experimental_rerun()
+
 else:
     st.warning("No hay incidencias registradas con esos criterios.")
