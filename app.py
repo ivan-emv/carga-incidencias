@@ -113,7 +113,7 @@ if not df.empty:
                 fila_google = next(idx for idx, row in enumerate(sheet_data) if row.get("Código") == codigo_actual)
                 for col in cambios.columns:
                     if fila_cambios[col]:
-                        col_index = df_editado.columns.get_loc(col) + 1
+                        col_index = list(df_editado.columns).index(col) + 1  # Posición real en la hoja
                         sheet.update_cell(fila_google + 2, col_index, df_editado.at[i, col])
             except StopIteration:
                 st.error(f"No se encontró el código {codigo_actual} en la hoja de Google Sheets.")
